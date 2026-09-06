@@ -5,6 +5,12 @@
   Capacitor community plugin for native Facebook Login.
 </p>
 
+<!-- rdlabo-docs-omit -->
+<p align="center">
+  <strong><a href="https://docs.rdlabo.dev/projects/capacitor-facebook-login">Read the full documentation</a></strong>
+</p>
+<!-- /rdlabo-docs-omit -->
+
 <p align="center">
   <img src="https://img.shields.io/maintenance/yes/2026?style=flat-square" />
   <a href="https://www.npmjs.com/package/@capacitor-community/facebook-login"><img src="https://img.shields.io/npm/l/@capacitor-community/facebook-login?style=flat-square" /></a>
@@ -15,9 +21,9 @@
 
 ## Maintainers
 
-| Maintainer          | GitHub                              | Social                                |
-| ------------------- | ----------------------------------- | ------------------------------------- |
-| Masahiko Sakakibara | [rdlabo](https://github.com/rdlabo) | [@rdlabo](https://twitter.com/rdlabo) |
+| Maintainer          | GitHub                              | Social                                | Website                               |
+| ------------------- | ----------------------------------- | ------------------------------------- | ------------------------------------- |
+| Masahiko Sakakibara | [rdlabo](https://github.com/rdlabo) | [@rdlabo](https://twitter.com/rdlabo) | [rdlabo.dev](https://rdlabo.dev/) |
 
 Maintenance Status: Actively Maintained
 
@@ -59,7 +65,7 @@ Install the plugin major version that matches your Capacitor major version.
 | 6         | 6.x    |
 
 Complete the required native and Web setup in
-[Configuration](./docs/configuration.md) before calling the plugin.
+[Configuration](https://docs.rdlabo.dev/projects/capacitor-facebook-login/docs/configuration) before calling the plugin.
 
 ## First email login
 
@@ -91,16 +97,36 @@ access token. Profile via Graph requires different token conditions—see
 
 ## Documentation
 
-Start with [Configuration](./docs/configuration.md), then use the guide for the
+Start with [Configuration](https://docs.rdlabo.dev/projects/capacitor-facebook-login/docs/configuration), then use the guide for the
 feature you are implementing. Method signatures and generated type information
 remain in the [API](#api) section below.
 
-- [Configuration](./docs/configuration.md) — Meta app settings and Android, iOS,
+- [Configuration](https://docs.rdlabo.dev/projects/capacitor-facebook-login/docs/configuration) — Meta app settings and Android, iOS,
   and Web SDK setup.
-- [Authentication](./docs/authentication.md) — login, logout, current tokens,
+- [Authentication](https://docs.rdlabo.dev/projects/capacitor-facebook-login/docs/authentication) — login, logout, current tokens,
   profile fields, reauthorization, and platform differences.
-- [App Events](./docs/app-events.md) — custom events, parameters, automatic event
+- [App Events](https://docs.rdlabo.dev/projects/capacitor-facebook-login/docs/app-events) — custom events, parameters, automatic event
   logging, and advertiser settings.
+
+<!-- rdlabo-docs-omit -->
+
+## Prerelease channels
+
+An open, non-draft pull request can be published to the npm `beta` dist-tag after its `Validation` and `Package Candidate` workflows pass. A repository owner or maintainer must add a comment whose entire body is:
+
+```text
+/beta
+```
+
+The request authorizes only the pull request head SHA that existed when the comment was added. The workflow revalidates the owner or maintainer permission and head SHA immediately before publishing. Any new commit requires CI to pass again and a fresh owner or maintainer `/beta` comment. Fork pull requests are supported. Pull requests that change a release-gating workflow cannot be beta-published until those workflow changes land on `main`.
+
+Beta versions use `<base>-beta.pr<PR number>.sha<12-character SHA>`. The candidate is built in a read-only workflow without npm publishing credentials. The privileged release workflow publishes only the validated immutable package artifact with lifecycle scripts disabled. A notification failure cannot invalidate a successful npm publish.
+
+When a pull request is merged into `main`, it is automatically published to `beta` only after the required CI and `Package Candidate` succeed for that exact merge commit. Direct pushes to `main` do not publish a candidate.
+
+Only `npm run release` creates a release tag. Stable `vX.Y.Z` tags publish to npm `latest`; revision/prerelease tags publish to `next`. Neither `beta` nor `next` publishing changes the npm `latest` dist-tag.
+
+<!-- /rdlabo-docs-omit -->
 
 ## API
 
