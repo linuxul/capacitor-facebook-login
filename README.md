@@ -69,7 +69,7 @@ Complete the required native and Web setup in
 
 ## First email login
 
-After [Installation](#installation) and [Configuration](./docs/configuration.md),
+After [Installation](#installation) and [Configuration](https://docs.rdlabo.dev/projects/capacitor-facebook-login/docs/configuration),
 call login from a user action such as a button click. Request only `email` for
 the first check:
 
@@ -93,7 +93,7 @@ Web, a failed login rejects instead.
 
 iOS Limited Login returns an OIDC authentication token (JWT), not a Graph API
 access token. Profile via Graph requires different token conditions—see
-[Authentication](./docs/authentication.md).
+[Authentication](https://docs.rdlabo.dev/projects/capacitor-facebook-login/docs/authentication).
 
 ## Documentation
 
