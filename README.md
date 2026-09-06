@@ -39,29 +39,6 @@ Capacitor community plugin for Facebook Login and Facebook App Events on
 Android, iOS, and Web. It wraps the native Meta SDKs on Android and iOS and the
 Facebook JavaScript SDK on Web.
 
-## Features
-
-- Facebook login and logout, with native data access reauthorization
-- Current access token lookup
-- Facebook Graph API profile requests
-- Facebook App Events with string and number parameters
-- Native App Event and advertiser settings
-
-## Quick start
-
-After [Installation](#installation) and the platform configuration below,
-request the permissions your app needs:
-
-```ts
-import { FacebookLogin } from '@capacitor-community/facebook-login';
-
-const result = await FacebookLogin.login({ permissions: ['email'] });
-
-if (result.accessToken) {
-  console.log('Facebook login completed.');
-}
-```
-
 ## Installation
 
 This plugin targets Capacitor 8, iOS 15 or later, and Android API 24 or later.
@@ -83,6 +60,34 @@ Install the plugin major version that matches your Capacitor major version.
 
 Complete the required native and Web setup in
 [Configuration](./docs/configuration.md) before calling the plugin.
+
+## First email login
+
+After [Installation](#installation) and [Configuration](./docs/configuration.md),
+call login from a user action such as a button click. Request only `email` for
+the first check:
+
+```ts
+import { FacebookLogin } from '@capacitor-community/facebook-login';
+
+async function onLoginClick() {
+  const result = await FacebookLogin.login({ permissions: ['email'] });
+
+  if (result.accessToken) {
+    console.log('Facebook login succeeded.');
+  } else {
+    console.log('Facebook login canceled or returned no token.');
+  }
+}
+```
+
+Expected result: success resolves with an `accessToken` object (do not log the
+raw token string). Cancellation on Android and iOS resolves without a token. On
+Web, a failed login rejects instead.
+
+iOS Limited Login returns an OIDC authentication token (JWT), not a Graph API
+access token. Profile via Graph requires different token conditions—see
+[Authentication](./docs/authentication.md).
 
 ## Documentation
 

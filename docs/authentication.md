@@ -18,23 +18,24 @@ The `nonce` option is used by Android and iOS and ignored on Web. Pass the raw n
 
 ## Login
 
-Request only the permissions your app uses:
+Request only the permissions your app uses. Call `login` from a user action such as a button click:
 
 ```ts
 import { FacebookLogin } from '@capacitor-community/facebook-login';
 
 const result = await FacebookLogin.login({
-  permissions: ['email', 'user_birthday'],
+  permissions: ['email'],
 });
 
 if (result.accessToken) {
-  console.log(`Facebook token: ${result.accessToken.token}`);
+  console.log('Facebook login succeeded.');
 } else {
-  // No token was returned by the native platform.
+  // Cancelled or no token returned by the native platform.
+  console.log('Facebook login canceled or returned no token.');
 }
 ```
 
-On Web, login rejects if Facebook does not return a usable token. On Android and iOS, a cancelled login resolves without a token.
+Do not log `accessToken.token`. On Web, login rejects if Facebook does not return a usable token. On Android and iOS, a cancelled login resolves without a token.
 
 ### iOS tracking mode and nonce
 
@@ -54,7 +55,10 @@ Limited Login tokens should be validated as OIDC tokens by your backend. Do not 
 const result = await FacebookLogin.getCurrentAccessToken();
 
 if (result.accessToken) {
-  console.log(`Current Facebook token: ${result.accessToken.token}`);
+  console.log('Current Facebook token is available.', {
+    isExpired: result.accessToken.isExpired,
+    permissions: result.accessToken.permissions,
+  });
 }
 ```
 
