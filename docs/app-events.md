@@ -1,6 +1,6 @@
 # App Events
 
-Complete [Configuration](./configuration.md) before logging Facebook App Events.
+Complete [Configuration](https://docs.rdlabo.dev/projects/capacitor-facebook-login/docs/configuration) before logging Facebook App Events.
 
 ## Platform behavior
 

@@ -134,5 +134,5 @@ await FacebookLogin.initialize({
 
 ## Next steps
 
-- [Authentication](./authentication.md)
-- [App Events](./app-events.md)
+- [Authentication](https://docs.rdlabo.dev/projects/capacitor-facebook-login/docs/authentication)
+- [App Events](https://docs.rdlabo.dev/projects/capacitor-facebook-login/docs/app-events)

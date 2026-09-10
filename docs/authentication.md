@@ -1,6 +1,6 @@
 # Authentication
 
-Complete [Configuration](./configuration.md) before using the authentication methods.
+Complete [Configuration](https://docs.rdlabo.dev/projects/capacitor-facebook-login/docs/configuration) before using the authentication methods.
 
 ## Platform behavior
 
