@@ -2,7 +2,7 @@
 
 Create or select an app in the [Meta App Dashboard](https://developers.facebook.com/apps/), enable Facebook Login, and configure each platform that your Capacitor app supports.
 
-The plugin targets Capacitor 8, iOS 15 or later, and Android API 24 or later. It declares the native Facebook SDK dependencies, so do not add a second Facebook SDK dependency.
+The plugin targets the forked Capacitor 8 runtime (Kotlin on Android, Swift on iOS), iOS 17 or later, and Android 13 (API 33) or later. It declares the native Facebook SDK dependencies, so do not add a second Facebook SDK dependency.
 
 ## Android
 

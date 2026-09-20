@@ -47,7 +47,7 @@ Facebook JavaScript SDK on Web.
 
 ## Installation
 
-This plugin targets Capacitor 8, iOS 15 or later, and Android API 24 or later.
+This plugin targets the forked Capacitor 8 runtime (Kotlin on Android, Swift on iOS), iOS 17 or later, and Android 13 (API 33) or later.
 It declares the native Facebook SDK dependencies for both CocoaPods and Swift
 Package Manager.
 

@@ -12,16 +12,16 @@ public class FacebookLoginPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "FacebookLoginPlugin"
     public let jsName = "FacebookLogin"
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "initialize", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "login", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "logout", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "getCurrentAccessToken", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "getProfile", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "reauthorize", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "logEvent", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "setAutoLogAppEventsEnabled", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "setAdvertiserTrackingEnabled", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "setAdvertiserIDCollectionEnabled", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "initialize", returnType: .promise),
+        CAPPluginMethod(name: "login", returnType: .promise),
+        CAPPluginMethod(name: "logout", returnType: .promise),
+        CAPPluginMethod(name: "getCurrentAccessToken", returnType: .promise),
+        CAPPluginMethod(name: "getProfile", returnType: .promise),
+        CAPPluginMethod(name: "reauthorize", returnType: .promise),
+        CAPPluginMethod(name: "logEvent", returnType: .promise),
+        CAPPluginMethod(name: "setAutoLogAppEventsEnabled", returnType: .promise),
+        CAPPluginMethod(name: "setAdvertiserTrackingEnabled", returnType: .promise),
+        CAPPluginMethod(name: "setAdvertiserIDCollectionEnabled", returnType: .promise)
     ]
 
     private let loginManager = LoginManager()
