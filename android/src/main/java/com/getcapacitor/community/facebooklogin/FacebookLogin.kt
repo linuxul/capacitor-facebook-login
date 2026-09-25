@@ -19,6 +19,7 @@ import com.getcapacitor.JSArray
 import com.getcapacitor.JSObject
 import com.getcapacitor.Plugin
 import com.getcapacitor.PluginCall
+import com.getcapacitor.PluginException
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
 import java.security.MessageDigest
@@ -115,8 +116,7 @@ public class FacebookLogin : Plugin() {
 
         if (latestCallbackId != null) {
             Log.e(logTag, "login: overlapped calls not supported")
-            call.reject("Overlapped calls call not supported")
-            return
+            throw PluginException("Overlapped calls call not supported")
         }
 
         val permissions: Collection<String> = try {
@@ -124,8 +124,7 @@ public class FacebookLogin : Plugin() {
             call.getArray("permissions")!!.toList()
         } catch (e: Exception) {
             Log.e(logTag, "login: invalid 'permissions' argument", e)
-            call.reject("Invalid permissions argument")
-            return
+            throw PluginException("Invalid permissions argument")
         }
 
         val nonce = call.getString("nonce", "") ?: ""
@@ -157,9 +156,7 @@ public class FacebookLogin : Plugin() {
         if (latestCallbackId != null) {
             Log.e(logTag, "reauthorize: overlapped calls not supported")
 
-            call.reject("Overlapped calls call not supported")
-
-            return
+            throw PluginException("Overlapped calls call not supported")
         }
 
         latestCallbackId = call.callbackId
@@ -194,16 +191,12 @@ public class FacebookLogin : Plugin() {
 
         if (accessToken == null) {
             Log.d(logTag, "getProfile: accessToken is null")
-            call.reject("You're not logged in. Call FacebookLogin.login() first to obtain an access token.")
-
-            return
+            throw PluginException("You're not logged in. Call FacebookLogin.login() first to obtain an access token.")
         }
 
         if (accessToken.isExpired) {
             Log.d(logTag, "getProfile: accessToken is expired")
-            call.reject("AccessToken is expired.")
-
-            return
+            throw PluginException("AccessToken is expired.")
         }
 
         val parameters = Bundle()
@@ -215,9 +208,7 @@ public class FacebookLogin : Plugin() {
 
             parameters.putString("fields", fieldsString)
         } catch (e: JSONException) {
-            call.reject("Can't handle fields", ex = e)
-
-            return
+            throw PluginException("Can't handle fields", cause = e)
         }
 
         val graphRequest = GraphRequest.newMeRequest(accessToken) { _, response ->
@@ -260,6 +251,8 @@ public class FacebookLogin : Plugin() {
         if (enabled != null) {
             FacebookSdk.setAutoLogAppEventsEnabled(enabled)
         }
+        // This call used to stay pending; iOS resolves it.
+        call.resolve()
     }
 
     @PluginMethod
@@ -269,6 +262,8 @@ public class FacebookLogin : Plugin() {
         if (enabled != null) {
             FacebookSdk.setAdvertiserIDCollectionEnabled(enabled)
         }
+        // This call used to stay pending; iOS resolves it.
+        call.resolve()
     }
 
     // Must run on the main thread, where fragment transactions are allowed.
