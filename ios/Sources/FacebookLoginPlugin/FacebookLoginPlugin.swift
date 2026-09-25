@@ -12,17 +12,21 @@ public class FacebookLoginPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "FacebookLoginPlugin"
     public let jsName = "FacebookLogin"
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "initialize", returnType: .promise),
-        CAPPluginMethod(name: "login", returnType: .promise),
-        CAPPluginMethod(name: "logout", returnType: .promise),
-        CAPPluginMethod(name: "getCurrentAccessToken", returnType: .promise),
-        CAPPluginMethod(name: "getProfile", returnType: .promise),
-        CAPPluginMethod(name: "reauthorize", returnType: .promise),
-        CAPPluginMethod(name: "logEvent", returnType: .promise),
-        CAPPluginMethod(name: "setAutoLogAppEventsEnabled", returnType: .promise),
-        CAPPluginMethod(name: "setAdvertiserTrackingEnabled", returnType: .promise),
-        CAPPluginMethod(name: "setAdvertiserIDCollectionEnabled", returnType: .promise)
+        .promise("initialize", FacebookLoginPlugin.initialize),
+        .promise("login", FacebookLoginPlugin.login),
+        .promise("logout", FacebookLoginPlugin.logout),
+        .promise("getCurrentAccessToken", FacebookLoginPlugin.getCurrentAccessToken),
+        .promise("getProfile", FacebookLoginPlugin.getProfile),
+        .promise("reauthorize", FacebookLoginPlugin.reauthorize),
+        .promise("logEvent", FacebookLoginPlugin.logEvent),
+        .promise("setAutoLogAppEventsEnabled", FacebookLoginPlugin.setAutoLogAppEventsEnabled),
+        .promise("setAdvertiserTrackingEnabled", FacebookLoginPlugin.setAdvertiserTrackingEnabled),
+        .promise("setAdvertiserIDCollectionEnabled", FacebookLoginPlugin.setAdvertiserIDCollectionEnabled)
     ]
+
+    // The methods stay synchronous. login and reauthorize hand the Facebook login UI to the main queue and settle
+    // from LoginManager's completion handler, which the SDK drops without calling when a login is already running,
+    // so they are not awaited through a continuation. The others are ordered setters or settle from SDK callbacks.
 
     private let loginManager = LoginManager()
     private let dateFormatter = ISO8601DateFormatter()
@@ -35,14 +39,13 @@ public class FacebookLoginPlugin: CAPPlugin, CAPBridgedPlugin {
         return dateFormatter.string(from: date)
     }
 
-    @objc func initialize(_ call: CAPPluginCall) {
+    func initialize(_ call: CAPPluginCall) {
         call.resolve()
     }
 
-    @objc func login(_ call: CAPPluginCall) {
+    func login(_ call: CAPPluginCall) throws {
         guard let permissions = call.getArray("permissions", String.self) else {
-            call.reject("Missing permissions argument")
-            return
+            throw CAPPluginError("Missing permissions argument")
         }
 
         let nonce = call.getString("nonce") ?? ""
@@ -90,12 +93,12 @@ public class FacebookLoginPlugin: CAPPlugin, CAPBridgedPlugin {
         return hashed.compactMap { String(format: "%02x", $0) }.joined()
     }
 
-    @objc func logout(_ call: CAPPluginCall) {
+    func logout(_ call: CAPPluginCall) {
         loginManager.logOut()
         call.resolve()
     }
 
-    @objc func reauthorize(_ call: CAPPluginCall) {
+    func reauthorize(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
             if let token = AccessToken.current, !token.isDataAccessExpired {
                 return self.getCurrentAccessToken(call)
@@ -112,7 +115,7 @@ public class FacebookLoginPlugin: CAPPlugin, CAPBridgedPlugin {
         }
     }
 
-    @objc func getCurrentAccessToken(_ call: CAPPluginCall) {
+    func getCurrentAccessToken(_ call: CAPPluginCall) {
         guard let authenticationToken = AuthenticationToken.current else {
             call.resolve()
             return
@@ -132,20 +135,17 @@ public class FacebookLoginPlugin: CAPPlugin, CAPBridgedPlugin {
         ])
     }
 
-    @objc func getProfile(_ call: CAPPluginCall) {
+    func getProfile(_ call: CAPPluginCall) throws {
         guard let accessToken = AccessToken.current else {
-            call.reject("You're not logged in. Call FacebookLogin.login() first to obtain an access token.")
-            return
+            throw CAPPluginError("You're not logged in. Call FacebookLogin.login() first to obtain an access token.")
         }
 
         if accessToken.isExpired {
-            call.reject("AccessToken is expired.")
-            return
+            throw CAPPluginError("AccessToken is expired.")
         }
 
         guard let fields = call.getArray("fields", String.self) else {
-            call.reject("Missing fields argument")
-            return
+            throw CAPPluginError("Missing fields argument")
         }
         let parameters = ["fields": fields.joined(separator: ",")]
         let graphRequest = GraphRequest.init(graphPath: "me", parameters: parameters)
@@ -160,7 +160,7 @@ public class FacebookLoginPlugin: CAPPlugin, CAPBridgedPlugin {
         }
     }
 
-    @objc func logEvent(_ call: CAPPluginCall) {
+    func logEvent(_ call: CAPPluginCall) {
         if let eventName = call.getString("eventName") {
             let parameters = call.getObject("parameters")?.reduce(into: [AppEvents.ParameterName: Any]()) { result, item in
                 if item.value is String || item.value is NSNumber {
@@ -173,7 +173,7 @@ public class FacebookLoginPlugin: CAPPlugin, CAPBridgedPlugin {
         call.resolve()
     }
 
-    @objc func setAutoLogAppEventsEnabled(_ call: CAPPluginCall) {
+    func setAutoLogAppEventsEnabled(_ call: CAPPluginCall) {
         if let enabled = call.getBool("enabled") {
             Settings.shared.isAutoLogAppEventsEnabled = enabled
         } else {
@@ -182,12 +182,12 @@ public class FacebookLoginPlugin: CAPPlugin, CAPBridgedPlugin {
         call.resolve()
     }
 
-    @objc func setAdvertiserTrackingEnabled(_ call: CAPPluginCall) {
+    func setAdvertiserTrackingEnabled(_ call: CAPPluginCall) {
         Settings.shared.isAdvertiserTrackingEnabled = call.getBool("enabled", false)
         call.resolve()
     }
 
-    @objc func setAdvertiserIDCollectionEnabled(_ call: CAPPluginCall) {
+    func setAdvertiserIDCollectionEnabled(_ call: CAPPluginCall) {
         if let enabled = call.getBool("enabled") {
             Settings.shared.isAdvertiserIDCollectionEnabled = enabled
         } else {
